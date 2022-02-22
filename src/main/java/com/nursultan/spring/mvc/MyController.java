@@ -2,9 +2,12 @@ package com.nursultan.spring.mvc;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/employee")
@@ -22,18 +25,19 @@ public class MyController {
         emp.setName("Ivan");
         emp.setSurName("Petrov");
         emp.setSalary(500);*/
+
         model.addAttribute("employee", new Employee());
 
         return "ask-emp-details-view";
     }
 
-    // first way
+    // simple way
     /*@RequestMapping("/showDetails")
     public String showEmpDetails() {
         return "show-emp-details-view";
     }*/
 
-    // first way
+    // hard coded way
     /*@RequestMapping("/showDetails")
     public String showEmpDetails(HttpServletRequest request, Model model) {
 
@@ -46,7 +50,7 @@ public class MyController {
         return "show-emp-details-view";
     }*/
 
-    // first way
+    // we use RequestParam and Model
     /*@RequestMapping("/showDetails")
     public String showEmpDetails(@RequestParam("employeeName") String empName,
                                  Model model) {
@@ -57,19 +61,23 @@ public class MyController {
         return "show-emp-details-view";
     }*/
 
-    //
-    @RequestMapping("/showDetails")
+    // we use ModelAttribute and Employee
+    /*@RequestMapping("/showDetails")
     public String showEmpDetails(@ModelAttribute("employee") Employee emp) {
 
-        String name = emp.getName();
-        emp.setName("Mr. " + name);
-
-        String surname = emp.getSurName();
-        emp.setSurName(surname + "!");
-
-        int salary = emp.getSalary();
-        emp.setSalary(salary * 10);
-
         return "show-emp-details-view";
+    }*/
+
+    // setup checking by name
+    @RequestMapping("/showDetails")
+    public String showEmpDetails(@Valid @ModelAttribute("employee") Employee emp,
+                                 BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            return "ask-emp-details-view";
+        }
+        else {
+            return "show-emp-details-view";
+        }
     }
 }

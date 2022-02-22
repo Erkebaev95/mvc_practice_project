@@ -1,10 +1,15 @@
 package com.nursultan.spring.mvc;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Employee {
+    @Size(min = 2, message = "name must be min 2 symbols")
     private String name;
+    @NotEmpty(message = "surname is required field")
     private String surName;
     private int salary;
     private String department;
@@ -13,7 +18,6 @@ public class Employee {
     private Map<String, String> carBrands;
     private String[] languages;
     private Map<String, String > languageList;
-
 
     public Employee() {
         departments = new HashMap<>();
